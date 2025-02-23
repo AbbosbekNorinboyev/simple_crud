@@ -12,6 +12,9 @@ public class UsersMapper {
                 .surname(userCreateDTO.getSurname())
                 .email(userCreateDTO.getEmail())
                 .password(userCreateDTO.getPassword())
+                .createdAt(userCreateDTO.getCreatedAt())
+                .updatedAt(userCreateDTO.getUpdatedAt())
+                .deletedAt(userCreateDTO.getDeletedAt())
                 .build();
     }
 
@@ -21,6 +24,9 @@ public class UsersMapper {
                 .surname(user.getSurname())
                 .email(user.getEmail())
                 .password(user.getPassword())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .deletedAt(user.getDeletedAt())
                 .build();
     }
 }

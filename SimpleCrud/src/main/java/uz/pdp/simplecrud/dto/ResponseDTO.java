@@ -17,5 +17,4 @@ public class ResponseDTO<T> {
     private Boolean success;
     private T data;
     private List<ErrorDTO> errors;
-
 }

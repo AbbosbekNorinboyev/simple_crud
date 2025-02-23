@@ -2,7 +2,6 @@ package uz.pdp.simplecrud.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.simplecrud.dto.CardCreateDTO;
 import uz.pdp.simplecrud.dto.ResponseDTO;
@@ -28,14 +27,14 @@ public class CardController {
     }
 
     @GetMapping
-    public List<Card> getAllCard() {
+    public ResponseDTO<List<Card>> getAllCard() {
         return cardService.getAllCard();
     }
 
     @PutMapping("/{cardId}/{userId}")
-    public ResponseEntity<ResponseDTO<CardCreateDTO>> updateCard(@RequestBody @Valid CardCreateDTO cardCreateDTO,
-                                                                 @PathVariable Integer cardId,
-                                                                 @PathVariable Integer userId) {
+    public ResponseDTO<CardCreateDTO> updateCard(@RequestBody @Valid CardCreateDTO cardCreateDTO,
+                                                 @PathVariable Integer cardId,
+                                                 @PathVariable Integer userId) {
         return cardService.updateCard(cardCreateDTO, cardId, userId);
     }
 }

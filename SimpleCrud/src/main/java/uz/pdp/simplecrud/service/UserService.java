@@ -12,7 +12,7 @@ public interface UserService {
 
     ResponseDTO<Users> getUser(@NonNull Integer id);
 
-    List<Users> getAllUser();
+    ResponseDTO<List<Users>> getAllUser();
 
     ResponseDTO<UserCreateDTO> updateUser(@NonNull UserCreateDTO userCreateDTO, @NonNull Integer id);
 
