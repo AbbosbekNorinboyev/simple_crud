@@ -2,6 +2,7 @@ package uz.pdp.simplecrud.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import uz.pdp.simplecrud.dto.ResponseDTO;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             log.info("User successfully saved");
             return ResponseDTO.<Users>builder()
-                    .code(1)
+                    .code(HttpStatus.OK.value())
                     .success(true)
                     .message("Ok")
                     .data(user)
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             log.error("Error creating user: {}", e.getMessage(), e);
             return ResponseDTO.<Users>builder()
-                    .code(-1)
+                    .code(HttpStatus.BAD_REQUEST.value())
                     .message("An error occurred while creating the user")
                     .build();
         }
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
         Users user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
         return ResponseDTO.<Users>builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .success(true)
                 .message("User successfully created")
                 .data(user)
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public ResponseDTO<List<Users>> getAllUser() {
         List<Users> users = userRepository.findAll();
         return ResponseDTO.<List<Users>>builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .success(true)
                 .message("User list successfully found")
                 .data(users)
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
         user.setName(userCreateDTO.getName());
         userRepository.save(user);
         return ResponseDTO.<UserCreateDTO>builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .success(true)
                 .message("User successfully updated")
                 .data(userCreateDTO)
@@ -94,11 +95,12 @@ public class UserServiceImpl implements UserService {
             cardRepository.deleteCardByUserId(user.getId());
             userRepository.delete(user);
             return ResponseDTO.<UserCreateDTO>builder()
+                    .code(HttpStatus.OK.value())
                     .success(true)
                     .message("User successfully deleted")
                     .data(usersMapper.toDto(user))
                     .build();
         }
-        throw new ResolutionException("User not found: " + userId);
+        throw new ResourceNotFoundException("User not found: " + userId);
     }
 }

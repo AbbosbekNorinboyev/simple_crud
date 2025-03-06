@@ -1,10 +1,12 @@
 package uz.pdp.simplecrud.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import uz.pdp.simplecrud.dto.CardCreateDTO;
+import uz.pdp.simplecrud.dto.ErrorDTO;
 import uz.pdp.simplecrud.dto.ResponseDTO;
 import uz.pdp.simplecrud.entity.Card;
 import uz.pdp.simplecrud.entity.Users;
@@ -13,6 +15,7 @@ import uz.pdp.simplecrud.mapper.CardMapper;
 import uz.pdp.simplecrud.repozitory.CardRepository;
 import uz.pdp.simplecrud.repozitory.UsersRepository;
 import uz.pdp.simplecrud.service.CardService;
+import uz.pdp.simplecrud.validation.CardValidation;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,9 +27,19 @@ public class CardServiceImpl implements CardService {
     private final UsersRepository usersRepository;
     private final CardMapper cardMapper;
     private final CardRepository cardRepository;
+    private final CardValidation cardValidation;
 
     @Override
     public ResponseDTO<Card> createCard(@NonNull CardCreateDTO cardCreateDTO) {
+        List<ErrorDTO> errors = cardValidation.validate(cardCreateDTO);
+        if (!errors.isEmpty()) {
+            return ResponseDTO.<Card>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .success(true)
+                    .message("Card successfully created")
+                    .errors(errors)
+                    .build();
+        }
         List<Users> users = usersRepository.findAll();
         Card card = cardMapper.toEntity(cardCreateDTO);
         for (Users user : users) {
@@ -38,7 +51,7 @@ public class CardServiceImpl implements CardService {
             }
         }
         return ResponseDTO.<Card>builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .success(true)
                 .message("Card successfully created")
                 .data(card)
@@ -50,7 +63,7 @@ public class CardServiceImpl implements CardService {
         Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Card not found: " + id));
         return ResponseDTO.<Card>builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .message("Card successfully created")
                 .success(true)
                 .data(card)
@@ -61,7 +74,7 @@ public class CardServiceImpl implements CardService {
     public ResponseDTO<List<Card>> getAllCard() {
         List<Card> cards = cardRepository.findAll();
         return ResponseDTO.<List<Card>>builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .message("Card list successfully found")
                 .success(true)
                 .data(cards)
@@ -75,7 +88,7 @@ public class CardServiceImpl implements CardService {
         Optional<Users> optional = usersRepository.findById(userId);
         if (optional.isEmpty()) {
             ResponseEntity.badRequest().body(ResponseDTO.<CardCreateDTO>builder()
-                    .code(-3)
+                    .code(HttpStatus.BAD_REQUEST.value())
                     .message("User not found")
                     .build());
         }
@@ -90,7 +103,7 @@ public class CardServiceImpl implements CardService {
             card.setUser(users);
             cardRepository.save(card);
             return ResponseDTO.<CardCreateDTO>builder()
-                    .code(200)
+                    .code(HttpStatus.OK.value())
                     .message("Card successfully updated")
                     .success(true)
                     .build();
