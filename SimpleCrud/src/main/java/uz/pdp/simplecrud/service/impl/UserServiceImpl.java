@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
     public ResponseDTO<Users> getUser(@NonNull Integer id) {
         Users user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+        log.info("User successfully found");
         return ResponseDTO.<Users>builder()
                 .code(HttpStatus.OK.value())
                 .success(true)
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseDTO<List<Users>> getAllUser() {
         List<Users> users = userRepository.findAll();
+        log.info("User list successfully found");
         return ResponseDTO.<List<Users>>builder()
                 .code(HttpStatus.OK.value())
                 .success(true)
@@ -79,6 +81,7 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         user.setName(userCreateDTO.getName());
         userRepository.save(user);
+        log.info("User successfully updated");
         return ResponseDTO.<UserCreateDTO>builder()
                 .code(HttpStatus.OK.value())
                 .success(true)
@@ -94,6 +97,7 @@ public class UserServiceImpl implements UserService {
             Users user = optional.get();
             cardRepository.deleteCardByUserId(user.getId());
             userRepository.delete(user);
+            log.info("User successfully deleted");
             return ResponseDTO.<UserCreateDTO>builder()
                     .code(HttpStatus.OK.value())
                     .success(true)

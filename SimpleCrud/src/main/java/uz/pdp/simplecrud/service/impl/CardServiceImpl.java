@@ -1,6 +1,7 @@
 package uz.pdp.simplecrud.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CardServiceImpl implements CardService {
     private final UsersRepository usersRepository;
     private final CardMapper cardMapper;
@@ -48,6 +50,7 @@ public class CardServiceImpl implements CardService {
                         .orElseThrow(() -> new ResourceNotFoundException("User not found: " + user.getId()));
                 card.setUser(userFound);
                 cardRepository.save(card);
+                log.info("Card successfully created");
             }
         }
         return ResponseDTO.<Card>builder()
@@ -62,6 +65,7 @@ public class CardServiceImpl implements CardService {
     public ResponseDTO<Card> getCard(@NonNull Integer id) {
         Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Card not found: " + id));
+        log.info("Card successfully found");
         return ResponseDTO.<Card>builder()
                 .code(HttpStatus.OK.value())
                 .message("Card successfully created")
@@ -73,6 +77,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public ResponseDTO<List<Card>> getAllCard() {
         List<Card> cards = cardRepository.findAll();
+        log.info("Card list successfully found");
         return ResponseDTO.<List<Card>>builder()
                 .code(HttpStatus.OK.value())
                 .message("Card list successfully found")
@@ -102,6 +107,7 @@ public class CardServiceImpl implements CardService {
             card.setUpdatedAt(LocalDateTime.now());
             card.setUser(users);
             cardRepository.save(card);
+            log.info("Card successfully updated");
             return ResponseDTO.<CardCreateDTO>builder()
                     .code(HttpStatus.OK.value())
                     .message("Card successfully updated")

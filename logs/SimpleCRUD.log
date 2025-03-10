@@ -1,0 +1,4 @@
+2025-03-10 09:34:50 [scheduling-1] INFO  u.p.s.cron.LogCleanupScheduling - ✅ Log fayli tozalandi: C:\Abbos\Spring Project\Test Projects\SimpleCrud\logs\SimpleCRUD.log
+2025-03-10 09:34:57 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-10 09:34:57 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-03-10 09:34:57 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
